@@ -1,7 +1,8 @@
-package com.goodluckys.shoplist
+package com.goodluckys.shoplist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.goodluckys.shoplist.R
 import com.goodluckys.shoplist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
