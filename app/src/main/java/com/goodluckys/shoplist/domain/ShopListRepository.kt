@@ -1,8 +1,10 @@
 package com.goodluckys.shoplist.domain
 
+import androidx.lifecycle.LiveData
+
 interface ShopListRepository {
 
-    fun getShopList(): List<shopitem>
+    fun getShopList(): LiveData<List<shopitem>>
 
     fun getItem(ItemId:Int): shopitem
 
