@@ -11,28 +11,23 @@ import java.lang.RuntimeException
 
 class MainViewModel : ViewModel() {
 
-    private val repository = ShopListRepoImpl
+    private val repository = ShopListRepoImpl // не совсем верно
 
     private val showListUseCase = GetShopListUseCase(repository)
     private val deleteItemUseCase = DeleteItemUseCase(repository)
     private val editItemUseCase = EditShopItemUseCase(repository)
 
-    val shopList = MutableLiveData<List<shopitem>>()
+    val shopList = showListUseCase.getShopList()
 
-    private fun getShopList(){
-        val list = showListUseCase.getShopList()
-        shopList.postValue(list)
-    }
+
 
     fun deleteItemList(item:shopitem){
         deleteItemUseCase.delete(item)
-        getShopList()
     }
 
     fun changeEnableState(item:shopitem) {
         val newItem = item.copy(Enabled = !item.Enabled)
         editItemUseCase.edit(item)
-        getShopList()
     }
 
 }
