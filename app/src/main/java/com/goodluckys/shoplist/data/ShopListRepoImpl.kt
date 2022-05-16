@@ -14,7 +14,7 @@ object ShopListRepoImpl: ShopListRepository {   // наследовались о
     private val shopListLD = MutableLiveData<List<shopitem>>()
 
     init {
-        for(i in 0 until 150){
+        for(i in 0 until 20){
             val soap = shopitem(
                 "Name is $i",
                 120,
