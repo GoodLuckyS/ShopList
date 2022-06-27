@@ -1,46 +1,48 @@
 package com.goodluckys.shoplist.presentation.ViewModels
 
-import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.goodluckys.shoplist.data.ShopListRepoImpl
+import android.app.Application
+import androidx.lifecycle.*
+import com.goodluckys.shoplist.data.room.RoomShopListRepoImpl
 import com.goodluckys.shoplist.domain.usecases.AddShopListUseCase
 import com.goodluckys.shoplist.domain.usecases.EditShopItemUseCase
 import com.goodluckys.shoplist.domain.usecases.GetShopItemUseCase
-import com.goodluckys.shoplist.domain.shopitem
+import com.goodluckys.shoplist.domain.ShopItem
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class EditViewModel : ViewModel() {
+class EditViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopListRepoImpl()
-    private val _errorInputName = MutableLiveData<Boolean>() // private set
+    private val repository = RoomShopListRepoImpl(application)
+
+    private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
         get() = _errorInputName
     private var _errorInputCount = MutableLiveData<Boolean>()
     val errorInputCount: LiveData<Boolean>
         get() = _errorInputCount
 
-    private val _itemLD = MutableLiveData<shopitem>()
-    val itemLD: LiveData<shopitem>
+    private val _itemLD = MutableLiveData<ShopItem>()
+    val itemLD: LiveData<ShopItem>
         get() = _itemLD
 
-    private val _rFinish = MutableLiveData<Boolean>()
+    private val _shouldCloseScreen = MutableLiveData<Boolean>()
 
-    val rFinish: LiveData<Boolean>
+    val shouldCloseScreen: LiveData<Boolean> // single life event  // scope для фрагмента
         get() {
-            return _rFinish
+            return _shouldCloseScreen
         }
 
-
-    private val AddShopListUseCase = AddShopListUseCase(repository)
-    private val GetShopItemUseCase = GetShopItemUseCase(repository)
-    private val EditShopItemUseCase = EditShopItemUseCase(repository)
+    private val addShopListUseCase = AddShopListUseCase(repository)
+    private val getShopItemUseCase = GetShopItemUseCase(repository)
+    private val editShopItemUseCase = EditShopItemUseCase(repository)
 
     fun getItem(id: Int) {
-        val item = GetShopItemUseCase.getItem(id)
-        _itemLD.value = item
+        viewModelScope.launch {
+            val item = getShopItemUseCase.getItem(id)
+            _itemLD.postValue(item)
+        }
+
     }
 
     fun addItem(itemName: String?, itemCount: String?) {
@@ -48,9 +50,11 @@ class EditViewModel : ViewModel() {
         val count = parseCount(itemCount)
         val valid = validate(name, count)
         if (valid) {
-            val item = shopitem(name, count, true)
-            AddShopListUseCase.add(item)
-            finishWork()
+            viewModelScope.launch {
+                val item = ShopItem(0, name, count, true)
+                addShopListUseCase.add(item)
+                finishWork()
+            }
         }
     }
 
@@ -59,10 +63,12 @@ class EditViewModel : ViewModel() {
         val count = parseCount(itemCount)
         val valid = validate(name, count)
         if (valid) {
-            itemLD.value?.let {
-                val item = it.copy(name = name, count = count, Enabled = true)
-                EditShopItemUseCase.edit(item)
-                finishWork()
+            _itemLD.value?.let {
+                val item = it.copy(name = name, count = count)
+                viewModelScope.launch {
+                    editShopItemUseCase.edit(item)
+                    finishWork()
+                }
             }
         }
 
@@ -93,8 +99,22 @@ class EditViewModel : ViewModel() {
         return result
     }
 
+
+    fun resetErrorInputName() {
+        _errorInputName.value = false
+    }
+
+    fun resetErrorInputCount() {
+        _errorInputCount.value = false
+    }
+
     private fun finishWork() {
-        _rFinish.value = true
+        _shouldCloseScreen.postValue(true)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 
 }

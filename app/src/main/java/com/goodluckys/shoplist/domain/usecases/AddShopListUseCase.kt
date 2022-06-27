@@ -1,10 +1,10 @@
 package com.goodluckys.shoplist.domain.usecases
 
 import com.goodluckys.shoplist.domain.ShopListRepository
-import com.goodluckys.shoplist.domain.shopitem
+import com.goodluckys.shoplist.domain.ShopItem
 
 class AddShopListUseCase(private val shopListRepository: ShopListRepository) {
-    fun add(item: shopitem) {
+    suspend fun add(item: ShopItem) {
         shopListRepository.add(item)
     }
 }

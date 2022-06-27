@@ -1,10 +1,10 @@
 package com.goodluckys.shoplist.domain.usecases
 
 import com.goodluckys.shoplist.domain.ShopListRepository
-import com.goodluckys.shoplist.domain.shopitem
+import com.goodluckys.shoplist.domain.ShopItem
 
 class DeleteItemUseCase(private val shopListRepository: ShopListRepository) {
-    fun delete(item : shopitem)  {
+    suspend fun delete(item : ShopItem)  {
         shopListRepository.delete(item)
     }
 }

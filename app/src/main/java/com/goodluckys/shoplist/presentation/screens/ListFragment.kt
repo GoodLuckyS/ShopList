@@ -1,14 +1,10 @@
 package com.goodluckys.shoplist.presentation.screens
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,12 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goodluckys.shoplist.R
 import com.goodluckys.shoplist.databinding.FragmentListBinding
-import com.goodluckys.shoplist.domain.shopitem
 import com.goodluckys.shoplist.presentation.ViewModels.MainViewModel
 import com.goodluckys.shoplist.presentation.adapter.ShopListViewAdapter
-import java.lang.ProcessBuilder.Redirect.to
-import android.app.FragmentTransaction as FragmentTransaction
-import androidx.fragment.app.FragmentTransaction as FragmentTransaction1
 
 class ListFragment : Fragment(R.layout.fragment_list) {
     lateinit var viewModel: MainViewModel
@@ -42,8 +34,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         setRcView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.shopList.observe(viewLifecycleOwner) {
-            shopListAdapter.shopList = it
-            Log.d("Jopa","This is RC observe ${shopListAdapter.shopList}")
+            shopListAdapter.submitList(it)
         }
 
         binding.addNewItem.setOnClickListener {
@@ -79,7 +70,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = shopListAdapter.shopList[viewHolder.adapterPosition]
+                val item = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteItemList(item)
             }
         }
@@ -88,7 +79,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
     }
 
-    private fun openEdit(id:Int) {
+    private fun openEdit(id: Int) {
         val direction =
             ListFragmentDirections.actionListFragmentToEditFragment(EditFragment.edittypeKey, id)
         findNavController().navigate(
@@ -96,8 +87,12 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         )
 
     }
-    private fun openAdd(){
-        val directions = ListFragmentDirections.actionListFragmentToEditFragment(EditFragment.addtypeKey,EditFragment.UNDEF_ID)
+
+    private fun openAdd() {
+        val directions = ListFragmentDirections.actionListFragmentToEditFragment(
+            EditFragment.addtypeKey,
+            EditFragment.UNDEF_ID
+        )
         findNavController().navigate(
             directions
         )

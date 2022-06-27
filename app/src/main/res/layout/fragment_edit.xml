@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            app:cardBackgroundColor="#1DE9B6"
+            android:elevation="120dp"
+            app:cardBackgroundColor="#000000"
             app:cardCornerRadius="16dp">
 
             <TextView
@@ -34,8 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            app:cardBackgroundColor="#7CCCD6"
-            app:cardCornerRadius="24dp" >
+            android:elevation="120dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,47 +51,69 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:hint="Name"
+                    android:textColorHint="#FFFFFF"
+                    app:boxBackgroundColor="#000000"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
                     app:boxCornerRadiusTopStart="10dp"
-                    app:hintTextColor="@color/black">
+                    app:hintTextColor="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white" />
+                        android:backgroundTint="@color/black"
+                        android:textColor="#FFFFFF"
+                        android:textColorHighlight="#FFFFFF"
+                        android:textColorHint="#FFFFFF"
+                        android:textColorLink="#FFFFFF" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edtCount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:hint="Count"
+                    android:textColorHint="#FFFFFF"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
                     app:boxCornerRadiusTopStart="10dp"
-                    app:hintTextColor="@color/black">
+                    app:hintTextColor="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edCount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:inputType="number" />
+                        android:backgroundTint="@color/black"
+                        android:inputType="number"
+                        android:textColor="#FFFFFF"
+                        android:textColorHighlight="#FFFFFF"
+                        android:textColorHint="#FFFFFF"
+                        android:textColorLink="#FFFFFF" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:src="@drawable/ic_launcher_foreground" />
 
                 <Button
                     android:id="@+id/btSave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:backgroundTint="#1DE9B6"
-                    android:elevation="150dp"
-                    android:text="save" />
+                    android:layout_marginTop="50dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:elevation="250dp"
+                    android:text="save"
+                    android:textColor="#000000" />
+
                 <Button
                     android:id="@+id/btBack"
                     android:layout_width="match_parent"
@@ -97,10 +121,10 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:backgroundTint="@color/white"
+                    android:elevation="250dp"
                     android:text="BACK"
-                    android:textColor="@color/black"
 
-                    />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

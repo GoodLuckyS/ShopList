@@ -1,32 +1,21 @@
 package com.goodluckys.shoplist.presentation.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.goodluckys.shoplist.databinding.DisableItemBinding
 import com.goodluckys.shoplist.databinding.EnableItemBinding
-import com.goodluckys.shoplist.domain.shopitem
+import com.goodluckys.shoplist.domain.ShopItem
 import java.lang.RuntimeException
 
-class ShopListViewAdapter : RecyclerView.Adapter<ShopListViewAdapter.ShopListViewHolder>() {
+class ShopListViewAdapter : ListAdapter<ShopItem,ShopListViewAdapter.ShopListViewHolder>(ShopItemDiffCallback()) {
 
-
-    var shopList = listOf<shopitem>()
-        set(value) {
-            val callback = ShopItemDiffCallback(shopList, value)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
-
-    var onLongClickListener: ((item: shopitem) -> Unit)? = null
-    var onClickListener: ((item: shopitem) -> Unit)? = null
+    var onLongClickListener: ((item: ShopItem) -> Unit)? = null
+    var onClickListener: ((item: ShopItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopListViewHolder {
-//        Log.d("RCA","OnCreate - ${++count}")
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ENABLED_TYPE -> ShopListViewHolder.Enabled(
@@ -49,7 +38,7 @@ class ShopListViewAdapter : RecyclerView.Adapter<ShopListViewAdapter.ShopListVie
 
 
     override fun onBindViewHolder(holder: ShopListViewHolder, position: Int) {
-        val item = shopList[position]
+        val item = getItem(position)
         holder.onLongClickListener = onLongClickListener
         holder.onClickListener = onClickListener
         when (holder) {
@@ -61,24 +50,20 @@ class ShopListViewAdapter : RecyclerView.Adapter<ShopListViewAdapter.ShopListVie
 
 
     override fun getItemViewType(position: Int): Int {
-        return if (shopList[position].Enabled) {
+        return if (getItem(position).enabled) {
             ENABLED_TYPE
         } else {
             DISABLED_TYPE
         }
     }
 
-    override fun getItemCount(): Int {
-        return shopList.size
-    }
-
     sealed class ShopListViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        var onLongClickListener: ((item: shopitem) -> Unit)? = null
-        var onClickListener: ((item: shopitem) -> Unit)? = null
+        var onLongClickListener: ((item: ShopItem) -> Unit)? = null
+        var onClickListener: ((item: ShopItem) -> Unit)? = null
 
         class Enabled(private val binding: EnableItemBinding) : ShopListViewHolder(binding) {
-            fun bind(enable: shopitem) {
+            fun bind(enable: ShopItem) {
 
                 binding.tvItem.text = enable.name
                 binding.tvCount.text = enable.count.toString()
@@ -94,7 +79,7 @@ class ShopListViewAdapter : RecyclerView.Adapter<ShopListViewAdapter.ShopListVie
         }
 
         class Disabled(private val binding: DisableItemBinding) : ShopListViewHolder(binding) {
-            fun bind(disable: shopitem) {
+            fun bind(disable: ShopItem) {
                 binding.tvItem.text = disable.name
                 binding.tvCount.text = disable.count.toString()
                 binding.root.setOnLongClickListener {

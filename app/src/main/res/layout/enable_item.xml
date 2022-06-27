@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:backgroundTint="#00FFFFFF"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:elevation="14dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:backgroundTint="#00BCD4"
-        app:cardCornerRadius="15dp"
+        android:backgroundTint="#050505"
+        app:cardCornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
