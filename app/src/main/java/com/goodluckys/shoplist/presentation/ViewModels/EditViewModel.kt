@@ -1,8 +1,6 @@
 package com.goodluckys.shoplist.presentation.ViewModels
 
-import android.app.Application
 import androidx.lifecycle.*
-import com.goodluckys.shoplist.data.room.RoomShopListRepoImpl
 import com.goodluckys.shoplist.domain.usecases.AddShopListUseCase
 import com.goodluckys.shoplist.domain.usecases.EditShopItemUseCase
 import com.goodluckys.shoplist.domain.usecases.GetShopItemUseCase
@@ -10,10 +8,14 @@ import com.goodluckys.shoplist.domain.ShopItem
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class EditViewModel(application: Application) : AndroidViewModel(application) {
+class EditViewModel @Inject constructor(
+    private val addShopListUseCase: AddShopListUseCase,
+    private val getShopItemUseCase: GetShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase,
+) : ViewModel() {
 
-    private val repository = RoomShopListRepoImpl(application)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
@@ -32,10 +34,6 @@ class EditViewModel(application: Application) : AndroidViewModel(application) {
         get() {
             return _shouldCloseScreen
         }
-
-    private val addShopListUseCase = AddShopListUseCase(repository)
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
 
     fun getItem(id: Int) {
         viewModelScope.launch {

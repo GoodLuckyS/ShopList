@@ -10,7 +10,8 @@ import com.goodluckys.shoplist.databinding.EnableItemBinding
 import com.goodluckys.shoplist.domain.ShopItem
 import java.lang.RuntimeException
 
-class ShopListViewAdapter : ListAdapter<ShopItem,ShopListViewAdapter.ShopListViewHolder>(ShopItemDiffCallback()) {
+class ShopListViewAdapter :
+    ListAdapter<ShopItem, ShopListViewAdapter.ShopListViewHolder>(ShopItemDiffCallback()) {
 
     var onLongClickListener: ((item: ShopItem) -> Unit)? = null
     var onClickListener: ((item: ShopItem) -> Unit)? = null

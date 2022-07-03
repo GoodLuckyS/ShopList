@@ -18,29 +18,44 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.goodluckys.shoplist.R
 import com.goodluckys.shoplist.databinding.FragmentEditBinding
+import com.goodluckys.shoplist.presentation.MainApplication
 import com.goodluckys.shoplist.presentation.ViewModels.EditViewModel
+import com.goodluckys.shoplist.presentation.ViewModels.EditViewModelFactory
+import com.goodluckys.shoplist.presentation.ViewModels.MainViewModelFactory
+import javax.inject.Inject
 
 
 class EditFragment : Fragment(R.layout.fragment_edit) {
 
     lateinit var binding: FragmentEditBinding
-
     private lateinit var viewModel: EditViewModel
-
     private val args: EditFragmentArgs by navArgs()
+
+    private val appComponent by lazy {
+        (requireActivity().application as MainApplication).appComponent
+    }
+
+    @Inject
+    lateinit var viewModelFactory: EditViewModelFactory
+
+    override fun onAttach(context: Context) {
+        appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
+
         binding = FragmentEditBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[EditViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[EditViewModel::class.java]
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
         }

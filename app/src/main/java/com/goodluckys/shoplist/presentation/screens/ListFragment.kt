@@ -1,5 +1,6 @@
 package com.goodluckys.shoplist.presentation.screens
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,27 +13,43 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goodluckys.shoplist.R
 import com.goodluckys.shoplist.databinding.FragmentListBinding
+import com.goodluckys.shoplist.presentation.MainApplication
 import com.goodluckys.shoplist.presentation.ViewModels.MainViewModel
+import com.goodluckys.shoplist.presentation.ViewModels.MainViewModelFactory
 import com.goodluckys.shoplist.presentation.adapter.ShopListViewAdapter
+import javax.inject.Inject
 
 class ListFragment : Fragment(R.layout.fragment_list) {
     lateinit var viewModel: MainViewModel
-    lateinit var binding: FragmentListBinding
+    private lateinit var binding: FragmentListBinding
     lateinit var shopListAdapter: ShopListViewAdapter
+
+    @Inject
+    lateinit var viewModelFactory: MainViewModelFactory
+
+    private val appComponent by lazy {
+        (requireActivity().application as MainApplication).appComponent
+    }
+
+    override fun onAttach(context: Context) {
+        appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentListBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setRcView()
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.shopList.observe(viewLifecycleOwner) {
             shopListAdapter.submitList(it)
         }
@@ -64,7 +81,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                target: RecyclerView.ViewHolder,
             ): Boolean {
                 return false
             }

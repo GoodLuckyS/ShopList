@@ -6,7 +6,7 @@ import com.goodluckys.shoplist.data.room.ShopItemDb
 
 
 @Dao
-interface ShopItemDao {
+interface ShopListDao {
 
     @Query("SELECT * FROM ShopItems")
     fun getList(): LiveData<List<ShopItemDb>>

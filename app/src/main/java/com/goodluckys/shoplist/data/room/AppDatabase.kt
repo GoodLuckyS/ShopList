@@ -14,7 +14,7 @@ import kotlin.synchronized
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun getShopItemsDao(): ShopItemDao
+    abstract fun getShopItemsDao(): ShopListDao
 
     companion object {
 

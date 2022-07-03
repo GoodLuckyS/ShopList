@@ -2,6 +2,7 @@ package com.goodluckys.shoplist.presentation.ViewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.goodluckys.shoplist.data.room.RoomShopListRepoImpl
 import com.goodluckys.shoplist.domain.*
@@ -12,16 +13,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel @Inject constructor(
+    getShopListUseCase: GetShopListUseCase,
+    private val deleteItemUseCase: DeleteItemUseCase,
+    private val editItemUseCase: EditShopItemUseCase,
+) : ViewModel() {
 
-    private val repository = RoomShopListRepoImpl(application)
-
-    private val showListUseCase = GetShopListUseCase(repository)
-    private val deleteItemUseCase = DeleteItemUseCase(repository)
-    private val editItemUseCase = EditShopItemUseCase(repository)
-
-    val shopList = showListUseCase.getShopList()
+    val shopList = getShopListUseCase.getShopList()
 
     fun deleteItemList(item: ShopItem) {
         viewModelScope.launch {
@@ -36,6 +36,4 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
 
     }
-
-
 }
